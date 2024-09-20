@@ -1,7 +1,8 @@
 # terraform/kubernetes.tf
 
 resource "kind_cluster" "default" {
-  name           = "test_kind_cluster"
+  name       = var.cluster_name
+  node_image = "kindest/node:v1.27.3"
   wait_for_ready = true
 
   kind_config {
@@ -29,15 +30,19 @@ resource "kind_cluster" "default" {
     }
 
     node {
-      role  = "worker"
-      # name  = "worker-node-1"
-      image = "kindest/node:v1.27.1"
+      role = "worker"
+      name  = "worker-node-1"
     }
-
-    node {
-      role  = "worker"
-      # name  = "worker-node-2"
-      image = "kindest/node:v1.27.1"
+        node {
+      role = "worker"
+      name  = "worker-node-2"
     }
   }
+}
+resource "null_resource" "set_kubeconfig" {
+  provisioner "local-exec" {
+    command = "kind get kubeconfig --name=${var.cluster_name} > kubeconfig"
+  }
+
+  depends_on = [kind_cluster.default]
 }
