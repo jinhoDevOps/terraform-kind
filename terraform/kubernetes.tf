@@ -1,9 +1,13 @@
 # terraform/kubernetes.tf
+locals {
+  k8s_config_path = pathexpand("./kind-cluster-config/kubeconfig")  # 사용자 환경에 맞게 설정
+}
 
 resource "kind_cluster" "default" {
   name       = var.cluster_name
   node_image = "kindest/node:v1.27.3"
   wait_for_ready = true
+  kubeconfig_path = local.k8s_config_path
 
   kind_config {
     kind        = "Cluster"
@@ -31,17 +35,18 @@ resource "kind_cluster" "default" {
 
     node {
       role = "worker"
-      name  = "worker-node-1"
+
     }
-        node {
+    node {
       role = "worker"
-      name  = "worker-node-2"
+
     }
   }
 }
+
 resource "null_resource" "set_kubeconfig" {
   provisioner "local-exec" {
-    command = "kind get kubeconfig --name=${var.cluster_name} > kubeconfig"
+    command = "export KUBECONFIG=${local.k8s_config_path}"
   }
 
   depends_on = [kind_cluster.default]

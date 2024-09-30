@@ -108,6 +108,10 @@ On Windows systems, certain shell commands and file paths may not work as expect
 │ Provider releases are separate from Terraform CLI releases, so not all providers are available for all platforms. Other versions of this provider may have different platforms supported.
 ╵
 ```
+### WSL
+```bash
+wsl -d Ubuntu-22.04
+```
 
 ---
 GPT-4o 가 작성해준 리드미

@@ -3,5 +3,5 @@
 variable "cluster_name" {
   description = "CKA test Kind cluster"
   type        = string
-  default     = "kind-cluster01"
+  default     = "my-kind-cluster"
 }
